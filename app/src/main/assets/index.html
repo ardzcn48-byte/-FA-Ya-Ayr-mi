@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173d2b">
+<title>Zeytinyağı Ayırma</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#18251c;background:#f1f5f1}
+*{box-sizing:border-box}body{margin:0;padding:0 0 28px}
+header{background:#173d2b;color:#fff;padding:22px 17px 24px;border-radius:0 0 22px 22px}
+.headline{display:flex;align-items:center;gap:12px}.olive{font-size:32px}h1{font-size:23px;line-height:1.15;margin:0}header p{color:#d7e7da;font-size:13px;margin:8px 0 0}
+main{max-width:720px;margin:0 auto;padding:14px}
+.card{background:white;border:1px solid #e0e8e0;border-radius:17px;padding:16px;margin:0 0 13px;box-shadow:0 3px 12px #183d2b08}
+h2{font-size:16px;margin:0 0 13px}.hint{font-size:12px;color:#68766b;line-height:1.45;margin:10px 0 0}
+.kg-entry{background:#f2f8f2;border:1px solid #dce9dd;border-radius:13px;padding:13px}
+label{display:block;font-size:12px;font-weight:700;color:#5b6a5e;margin-bottom:7px}
+input{display:block;width:100%;min-width:0;border:1px solid #cbd8cd;border-radius:11px;background:#fff;padding:12px;font:inherit;font-size:17px;color:#17251b}
+input:focus{outline:2px solid #7eb58b;border-color:#3d8653}
+input[readonly]{background:#f4f6f4;color:#536357} select:focus{outline:2px solid #7eb58b;border-color:#3d8653}
+.total-input{font-size:27px;font-weight:750;padding:13px}
+.section-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.section{border:1px solid #e1e9e1;border-radius:13px;padding:11px;background:#fbfcfb}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.section-head b{font-size:14px}.tag{font-size:10px;color:#52715a;background:#eaf3eb;padding:4px 7px;border-radius:20px;white-space:nowrap}
+.section input{padding:11px;font-size:18px;font-weight:650}
+.section-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px}
+.mini{background:#f0f6f0;border-radius:9px;padding:8px 5px;min-width:0}
+.mini span{display:block;font-size:10px;color:#637466;margin-bottom:4px}
+.mini strong{font-size:13px;overflow-wrap:anywhere;display:block}
+.totals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.metric{padding:13px;border-radius:13px;background:#f0f6f0;min-width:0}
+.metric span{display:block;font-size:12px;color:#5e6f62;margin-bottom:6px}
+.metric strong{font-size:clamp(20px,5vw,27px);letter-spacing:-.4px;overflow-wrap:anywhere}
+.metric.primary{background:#173d2b;color:#fff}.metric.primary span{color:#d5e7d9}
+.table-wrap{overflow-x:auto;margin-top:14px}table{width:100%;border-collapse:collapse;min-width:480px;font-variant-numeric:tabular-nums}
+th,td{padding:10px 8px;border-bottom:1px solid #e6ece6;text-align:right;font-size:12px}th{color:#637166}th:first-child,td:first-child{text-align:left}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+button{border:0;border-radius:12px;padding:13px 10px;font:inherit;font-weight:750;font-size:14px;cursor:pointer;min-height:48px}
+.primary-btn{background:#1f6a3e;color:#fff}.secondary-btn{background:#e9efea;color:#243b2b}
+.status{font-size:12px;color:#a13b2d;font-weight:700;min-height:16px;margin-top:9px}
+footer{text-align:center;color:#7a867c;font-size:11px;padding:5px 18px}
+@media(min-width:560px){main{padding:20px}.section-list{grid-template-columns:repeat(3,minmax(0,1fr))}.card{padding:20px}}
+@media(max-width:360px){main{padding:9px}.card{padding:12px}.section-results{gap:4px}.mini strong{font-size:11px}.mini{padding:7px 4px}}
+@media print{body{background:white}header{border-radius:0}.card{box-shadow:none;break-inside:avoid}.actions{display:none}main{max-width:none}}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:13px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;margin-bottom:13px;color:#d7e7da">Şifa Zeytinyağı Fabrikası</div>
+  <div class="headline"><div class="olive">🫒</div><div><h1>Zeytinyağı Ayırma</h1><p>Fabrika hızlı işlem ekranı · 6 sabit bölüm</p></div></div>
+</header>
+<main>
+  <section class="card">
+    <h2>1. Gelen yağ miktarı</h2>
+    <div class="kg-entry">
+      <label for="incoming">Toplam gelen yağ (kg)</label>
+      <input id="incoming" class="total-input" type="number" inputmode="decimal" min="0" step="any" placeholder="Yağ miktarını gir">
+    </div>
+    <p class="hint">Excel'deki H1 hücresiyle aynı giriş. Miktarı değiştirince bütün sonuçlar otomatik yenilenir.</p>
+  </section>
+
+  <section class="card">
+    <h2>2. Ortaklar ve ödeme tercihleri</h2>
+    <div class="section-list" id="sectionList"></div>
+    <div style="margin-top:12px">
+      <label for="sumWeights">Katsayılar toplamı (Excel J1)</label>
+      <input id="sumWeights" readonly value="1">
+    </div>
+    <p class="hint">Her ortak için adını, katsayısını ve ödeme tercihini gir. Katsayılar Excel'deki B1–G1 dağılımını belirler. Kullanılmayan ortakları boş bırak.</p>
+  </section>
+
+  <section class="card">
+    <h2>3. Genel sonuç</h2>
+    <div class="totals">
+      <div class="metric"><span>Toplam gelen yağ</span><strong id="totalOil">0,00 kg</strong></div>
+      <div class="metric"><span>Hak olarak alınacak yağ</span><strong id="factoryOil">0,00 kg</strong></div>
+      <div class="metric primary"><span>Müşterilere verilecek toplam yağ</span><strong id="customerOil">0,00 kg</strong></div>
+      <div class="metric primary"><span>Para olarak alınacak toplam</span><strong id="factoryMoney">0,00 TL</strong></div>
+    </div>
+    <div class="status" id="status" role="status"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Ortak</th><th>Pay</th><th>Payına düşen yağ</th><th>Tercihi</th><th>Müşteriye yağ</th><th>Fabrika alacağı</th></tr></thead>
+        <tbody id="results"></tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button class="primary-btn" id="print">Yazdır / PDF</button>
+      <button class="secondary-btn" id="reset">Sıfırla</button>
+    </div>
+    <p class="hint">Her ortağın payına düşen yağ, katsayısına göre hesaplanır. “Hak olarak” seçen ortağın %15 hakkı yağ olarak ayrılır; “Para olarak” seçen ortağın %15 hakkı 250 TL/kg üzerinden hesaplanır. Müşteriye teslim ve fabrikanın alacağı ayrı ayrı gösterilir.</p>
+  </section>
+</main>
+<footer>Hesaplama cihazınızda yapılır; veriler bir sunucuya gönderilmez.</footer>
+<script>
+const initial=[1,0,0,0,0,0];
+const $=id=>document.getElementById(id);
+const fmt=(n,d=2)=>new Intl.NumberFormat('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
+const kg=n=>fmt(n)+' kg';
+const tl=n=>fmt(n)+' TL';
+const list=$('sectionList');
+initial.forEach((v,i)=>{
+ const el=document.createElement('div');el.className='section';
+ el.innerHTML=`<div class="section-head"><b>Ortak ${i+1}</b><span class="tag">Sabit ortak</span></div>
+ <label for="name${i}">Ortak adı</label><input id="name${i}" type="text" value="" placeholder="Adı" aria-label="Ortak ${i+1} adı" style="font-size:15px;font-weight:500;margin-bottom:9px">
+ <label for="w${i}">Pay katsayısı</label><input id="w${i}" type="number" inputmode="decimal" min="0" step="any" value="" placeholder="0" aria-label="Ortak ${i+1} pay katsayısı">
+ <label for="method${i}" style="margin-top:10px">Ödeme tercihi</label><select id="method${i}" style="display:block;width:100%;border:1px solid #cbd8cd;border-radius:10px;background:#fff;padding:10px 7px;font:inherit;font-size:13px;color:#17251b"><option value="oil">Hak olarak (yağ)</option><option value="money">Para olarak</option></select>
+ <div class="section-results"><div class="mini"><span>Payına düşen</span><strong id="allocated${i}">0 kg</strong></div><div class="mini"><span>Müşteriye yağ</span><strong id="customer${i}">0 kg</strong></div><div class="mini"><span>Fabrika alacağı</span><strong id="due${i}">0 kg</strong></div></div>`;
+ list.appendChild(el);
+});
+function calculate(){
+ const incoming=Math.max(0,Number($('incoming').value)||0);
+ const weights=initial.map((_,i)=>Math.max(0,Number($('w'+i).value)||0));
+ const names=initial.map((_,i)=>$('name'+i).value.trim()||`Ortak ${i+1}`);
+ const methods=initial.map((_,i)=>$('method'+i).value);
+ const sum=weights.reduce((a,b)=>a+b,0);
+ $('sumWeights').value=fmt(sum);
+ $('status').textContent=sum===0?'Pay katsayılarını gir; toplam 0 iken pay dağılımı yapılamaz.':'';
+ let totalOil=0,factoryOil=0,customerOil=0,factoryMoney=0;
+ $('results').innerHTML='';
+ weights.forEach((w,i)=>{
+   const ratio=sum===0?0:w/sum;
+   const allocated=incoming*ratio;
+   const right=allocated*0.15;
+   const dueMoney=right*250;
+   const customer=methods[i]==='oil'?Math.max(0,allocated-right):allocated;
+   const due=methods[i]==='oil'?kg(right):tl(dueMoney);
+   totalOil+=allocated;
+   if(methods[i]==='oil') factoryOil+=right; else factoryMoney+=dueMoney;
+   customerOil+=customer;
+   $('allocated'+i).textContent=kg(allocated);
+   $('customer'+i).textContent=kg(customer);
+   $('due'+i).textContent=methods[i]==='oil'?kg(right):tl(dueMoney);
+   const tr=document.createElement('tr');
+   [names[i],fmt(w),kg(allocated),methods[i]==='oil'?'Hak / yağ':'Para',kg(customer),due].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});
+   $('results').appendChild(tr);
+ });
+ $('totalOil').textContent=kg(totalOil);
+ $('factoryOil').textContent=kg(factoryOil);
+ $('customerOil').textContent=kg(customerOil);
+ $('factoryMoney').textContent=tl(factoryMoney);
+}
+document.querySelectorAll('input:not([readonly])').forEach(el=>el.addEventListener('input',calculate));
+document.querySelectorAll('select').forEach(el=>el.addEventListener('change',calculate));
+$('print').addEventListener('click',()=>window.print());
+$('reset').addEventListener('click',()=>{
+ $('incoming').value='';
+ initial.forEach((_,i)=>{$('w'+i).value='';$('name'+i).value='';$('method'+i).value='oil';});
+ calculate();
+});
+calculate();
+</script>
+</body>
+</html>
